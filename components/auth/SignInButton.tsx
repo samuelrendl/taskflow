@@ -6,7 +6,7 @@ export function SignIn() {
       <form
         action={async () => {
           "use server";
-          await signIn("github", { redirectTo: "/" });
+          await signIn("github", { redirectTo: "/dashboard" });
         }}
       >
         <button type="submit">Sign in with Github</button>
@@ -14,7 +14,7 @@ export function SignIn() {
       <form
         action={async () => {
           "use server";
-          await signIn("google", { redirectTo: "/" });
+          await signIn("google", { redirectTo: "/dashboard" });
         }}
       >
         <button type="submit">Sign in with Google</button>
