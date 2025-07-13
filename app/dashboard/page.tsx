@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { SignOut } from "@/components/auth/SignOutButton";
 
-const page = async () => {
+const Dashboard = async () => {
   const session = await auth();
 
   return (
@@ -12,4 +12,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default Dashboard;
