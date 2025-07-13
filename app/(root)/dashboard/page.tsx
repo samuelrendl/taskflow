@@ -1,8 +1,10 @@
-import { auth } from "@/auth";
 import { SignOut } from "@/components/auth/SignOutButton";
+import getSession from "@/lib/getSession";
+import { redirect } from "next/navigation";
 
 const Dashboard = async () => {
-  const session = await auth();
+  const session = await getSession();
+  if (!session?.user) redirect("/");
 
   return (
     <div>
