@@ -6,19 +6,77 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
+enum Role {
+  ADMIN
+  MANAGER
+  DEVELOPER
+  USER
+}
+
+enum IssueStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+enum IssuePriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
  
 model User {
-  id            String          @id @default(cuid())
-  name          String?
-  email         String          @unique
-  emailVerified DateTime?
-  role          String @default("user")
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
- 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String          @id @default(cuid())
+  name            String?
+  email           String          @unique
+  emailVerified   DateTime?
+  role            Role          @default(USER)
+  image           String?
+  teamId          String?         
+  team  Team?  @relation("TeamUsers", fields: [teamId], references: [id])
+  organizationId  String?
+  organization    Organization?   @relation("OrganizationUsers", fields: [organizationId], references: [id])
+  ownedOrganizations Organization[] @relation("OrganizationOwner")
+  accounts        Account[]
+  sessions        Session[]
+  issuesAssigned  Issue[]         @relation("AssignedIssues")
+  issuesCreated   Issue[]         @relation("CreatedIssues")
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  ownerId     String
+  owner       User     @relation("OrganizationOwner", fields: [ownerId], references: [id])
+  users       User[]   @relation("OrganizationUsers")
+  teams       Team[]
+}
+
+model Team {
+  id String @id @default(cuid())
+  name String
+  users User[] @relation("TeamUsers")
+  organizationId String
+  organization Organization @relation(fields: [organizationId], references: [id])
+}
+
+model Issue {
+  id            String    @id @default(cuid())
+  title         String
+  description   String
+  status        IssueStatus
+  priority      IssuePriority
+  assignedToId  String? 
+  assignedTo    User?     @relation("AssignedIssues", fields: [assignedToId], references: [id])
+  createdById   String
+  createdBy     User      @relation("CreatedIssues", fields: [createdById], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
  
 model Account {
