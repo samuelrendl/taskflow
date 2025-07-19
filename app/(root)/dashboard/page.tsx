@@ -1,6 +1,10 @@
-import { SignOut } from "@/components/auth/SignOutButton";
+import type { Metadata } from "next";
 import getSession from "@/lib/getSession";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 const Dashboard = async () => {
   const session = await getSession();
@@ -8,8 +12,8 @@ const Dashboard = async () => {
 
   return (
     <div>
-      <h1>{session?.user?.email}</h1>
-      <SignOut />
+      <h1>Welcome</h1>
+      <h2>{session?.user?.email}</h2>
     </div>
   );
 };
