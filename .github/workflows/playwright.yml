@@ -24,8 +24,10 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/taskflow_test
+
     steps:
       - uses: actions/checkout@v4
 
@@ -39,6 +41,9 @@ jobs:
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+
+      - name: Wait for Postgres
+        run: npx wait-on tcp:localhost:5432
 
       - name: Apply Prisma migrations
         run: npx prisma migrate deploy
