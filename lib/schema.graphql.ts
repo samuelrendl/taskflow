@@ -73,6 +73,7 @@ export const typeDefs = `#graphql
     teams: [Team!]!
     users: [User!]!
     issues: [Issue!]!
+    user(id: String!): User
   }
 
   type Mutation {
@@ -102,6 +103,19 @@ export const resolvers = {
     ) => {
       return context.prisma.issue.findMany();
     },
+
+    user: async (
+      _parent: unknown,
+      args: { id: string },
+      context: GraphQLContext,
+    ) => {
+      return context.prisma.user.findUnique({
+        where: { id: args.id },
+        include: {
+          organization: true,
+        },
+      });
+    },
   },
 
   Mutation: {
@@ -118,9 +132,15 @@ export const resolvers = {
               id: args.ownerId,
             },
           },
+          users: {
+            connect: {
+              id: args.ownerId,
+            },
+          },
         },
         include: {
           owner: true,
+          users: true,
         },
       });
     },
