@@ -74,6 +74,10 @@ export const typeDefs = `#graphql
     users: [User!]!
     issues: [Issue!]!
   }
+
+  type Mutation {
+    createOrganization(name: String! ownerId: String!): Organization!
+  }
 `;
 
 export const resolvers = {
@@ -97,6 +101,28 @@ export const resolvers = {
       context: GraphQLContext,
     ) => {
       return context.prisma.issue.findMany();
+    },
+  },
+
+  Mutation: {
+    createOrganization: async (
+      _parent: unknown,
+      args: { name: string; ownerId: string },
+      context: GraphQLContext,
+    ) => {
+      return context.prisma.organization.create({
+        data: {
+          name: args.name,
+          owner: {
+            connect: {
+              id: args.ownerId,
+            },
+          },
+        },
+        include: {
+          owner: true,
+        },
+      });
     },
   },
 };
