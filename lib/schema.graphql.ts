@@ -1,4 +1,5 @@
 import { GraphQLContext } from "./context";
+import { auth } from "../auth";
 
 export const typeDefs = `#graphql
   scalar DateTime
@@ -73,6 +74,7 @@ export const typeDefs = `#graphql
     teams: [Team!]!
     users: [User!]!
     issues: [Issue!]!
+    me: User
     user(id: String!): User
   }
 
@@ -102,6 +104,23 @@ export const resolvers = {
       context: GraphQLContext,
     ) => {
       return context.prisma.issue.findMany();
+    },
+
+    me: async (_parent: unknown, _args: object, context: GraphQLContext) => {
+      const session = await auth();
+
+      if (!session || !session.user?.email) return null;
+
+      return context.prisma.user.findUnique({
+        where: { email: session.user.email },
+        include: {
+          organization: true,
+          team: true,
+          issuesAssigned: true,
+          issuesCreated: true,
+          ownedOrganizations: true,
+        },
+      });
     },
 
     user: async (
