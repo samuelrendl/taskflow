@@ -3,9 +3,19 @@ export type MeResponse = {
     id: string;
     name: string;
     email: string;
-    organization?: {
-      id: string;
+    organization: {
       name: string;
     } | null;
   };
+};
+
+export type Organization = {
+  name: string;
+};
+
+export type Me = {
+  id: string;
+  name: string;
+  email: string;
+  organization: Organization | null;
 };

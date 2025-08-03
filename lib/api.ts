@@ -10,13 +10,11 @@ export const fetchMe = async () => {
           name
           email
           organization {
-            id
             name
           }
         }
       }
     `,
   });
-
   return data.me;
 };

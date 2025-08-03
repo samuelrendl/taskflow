@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sidebar,
   SidebarContent,
@@ -12,7 +14,9 @@ import {
 } from "@/components/ui/sidebar";
 import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
 import UserButton from "./UserButton";
-import getSession from "@/lib/getSession";
+import { useMe } from "@/hooks/useMe";
+import { useSession } from "next-auth/react";
+import { Button } from "./ui/button";
 
 const items = [
   {
@@ -42,17 +46,23 @@ const items = [
   },
 ];
 
-const SidebarNav = async () => {
-  const session = await getSession();
+const SidebarNav = () => {
+  const { data: session } = useSession();
   const user = session?.user;
-  if (!user) return null;
+  const me = useMe();
 
-  
+  if (!user) return null;
 
   return (
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader>
-        <h1 className="text-lg font-semibold">organization</h1>
+        <h1 className="text-lg font-semibold">
+          {me.me?.organization?.name ?? (
+            <div>
+              <Button variant="ghost">Create a Organization</Button>
+            </div>
+          )}
+        </h1>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />
