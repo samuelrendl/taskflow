@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import getSession from "@/lib/getSession";
 import { redirect } from "next/navigation";
+import FetchTest from "@/components/fetchTest";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -13,7 +14,7 @@ const Dashboard = async () => {
   return (
     <div>
       <h1>Welcome</h1>
-      <h2>{session?.user?.email}</h2>
+      <FetchTest />
     </div>
   );
 };

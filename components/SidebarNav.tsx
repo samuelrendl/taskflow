@@ -47,9 +47,13 @@ const SidebarNav = async () => {
   const user = session?.user;
   if (!user) return null;
 
+  
+
   return (
     <Sidebar variant="floating" collapsible="icon">
-      <SidebarHeader />
+      <SidebarHeader>
+        <h1 className="text-lg font-semibold">organization</h1>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />
         <SidebarGroupLabel>BLA BLA</SidebarGroupLabel>
