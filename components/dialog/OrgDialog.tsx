@@ -1,17 +1,29 @@
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InitialDialog from "./InitialDialog";
 import CreateDialog from "./CreateDialog";
 import JoinDialog from "./JoinDialog";
 
 type DialogStep = "initial" | "create" | "join";
 
-const OrgDialog = () => {
+const OrgDialog = ({ userHasOrg }: { userHasOrg: boolean }) => {
   const [step, setStep] = useState<DialogStep>("initial");
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!userHasOrg) {
+      setOpen(true);
+    }
+  }, [userHasOrg]);
+
+  const handleDialogChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (!isOpen) setStep("initial");
+  };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogTrigger asChild>
         <Button variant="outline">Create or Join an Org</Button>
       </DialogTrigger>
