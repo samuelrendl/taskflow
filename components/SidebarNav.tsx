@@ -57,7 +57,7 @@ const SidebarNav = () => {
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader>
         <h1 className="text-lg font-semibold">
-          {me.me?.organization?.name ?? <OrgDialog />}
+          {me.me?.organization?.name ?? <OrgDialog userHasOrg={false} />}
         </h1>
       </SidebarHeader>
       <SidebarContent>

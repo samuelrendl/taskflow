@@ -4,12 +4,16 @@ import { useEffect, useState } from "react";
 import InitialDialog from "./InitialDialog";
 import CreateDialog from "./CreateDialog";
 import JoinDialog from "./JoinDialog";
+import FinalDialog from "./FinalDialog";
+import { useMe } from "@/hooks/useMe";
 
-type DialogStep = "initial" | "create" | "join";
+type DialogStep = "initial" | "create" | "join" | "final";
 
 const OrgDialog = ({ userHasOrg }: { userHasOrg: boolean }) => {
   const [step, setStep] = useState<DialogStep>("initial");
   const [open, setOpen] = useState(false);
+
+  const me = useMe();
 
   useEffect(() => {
     if (!userHasOrg) {
@@ -29,7 +33,14 @@ const OrgDialog = ({ userHasOrg }: { userHasOrg: boolean }) => {
       </DialogTrigger>
       <DialogContent>
         {step === "initial" && <InitialDialog setStep={setStep} />}
-        {step === "create" && <CreateDialog setStep={setStep} />}
+        {step === "create" && (
+          <CreateDialog setStep={setStep} ownerId={me.me!.id} />
+        )}
+        {step === "final" && (
+          <FinalDialog
+            organizationName={me.me?.organization?.name || "Your Organization"}
+          />
+        )}
         {step === "join" && <JoinDialog setStep={setStep} />}
       </DialogContent>
     </Dialog>

@@ -21,5 +21,21 @@ export type Me = {
 };
 
 export type setTypeProps = {
-  setStep: (step: "initial" | "create" | "join") => void;
+  setStep: (step: "initial" | "create" | "join" | "final") => void;
+};
+
+export type CreateDialogProps = {
+  ownerId: string;
+  setStep: setTypeProps["setStep"];
+};
+
+export type FinalDialogProps = {
+  organizationName: string;
+};
+
+export type CreateOrgResponse = {
+  createOrganization: {
+    id: string;
+    name: string;
+  };
 };
