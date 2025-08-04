@@ -19,3 +19,7 @@ export type Me = {
   email: string;
   organization: Organization | null;
 };
+
+export type setTypeProps = {
+  setStep: (step: "initial" | "create" | "join") => void;
+};

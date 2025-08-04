@@ -16,7 +16,7 @@ import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
 import UserButton from "./UserButton";
 import { useMe } from "@/hooks/useMe";
 import { useSession } from "next-auth/react";
-import { Button } from "./ui/button";
+import OrgDialog from "./dialog/OrgDialog";
 
 const items = [
   {
@@ -57,11 +57,7 @@ const SidebarNav = () => {
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader>
         <h1 className="text-lg font-semibold">
-          {me.me?.organization?.name ?? (
-            <div>
-              <Button variant="ghost">Create a Organization</Button>
-            </div>
-          )}
+          {me.me?.organization?.name ?? <OrgDialog />}
         </h1>
       </SidebarHeader>
       <SidebarContent>
