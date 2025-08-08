@@ -6,11 +6,13 @@ import CreateDialog from "./CreateDialog";
 import JoinDialog from "./JoinDialog";
 import FinalDialog from "./FinalDialog";
 import { useMe } from "@/hooks/useMe";
+import { Organization } from "@/lib/types";
 
 type DialogStep = "initial" | "create" | "join" | "final";
 
 const OrgDialog = ({ userHasOrg }: { userHasOrg: boolean }) => {
   const [step, setStep] = useState<DialogStep>("initial");
+  const [stepData, setStepData] = useState<Organization | null>(null);
   const [open, setOpen] = useState(false);
 
   const me = useMe();
@@ -23,7 +25,15 @@ const OrgDialog = ({ userHasOrg }: { userHasOrg: boolean }) => {
 
   const handleDialogChange = (isOpen: boolean) => {
     setOpen(isOpen);
-    if (!isOpen) setStep("initial");
+    if (!isOpen) {
+      setStep("initial");
+      setStepData(null);
+    }
+  };
+
+  const handleSetStep = (newStep: DialogStep, data?: Organization | null) => {
+    setStep(newStep);
+    setStepData(data ?? null);
   };
 
   return (
@@ -32,16 +42,12 @@ const OrgDialog = ({ userHasOrg }: { userHasOrg: boolean }) => {
         <Button variant="outline">Create or Join an Org</Button>
       </DialogTrigger>
       <DialogContent>
-        {step === "initial" && <InitialDialog setStep={setStep} />}
+        {step === "initial" && <InitialDialog setStep={handleSetStep} />}
         {step === "create" && (
-          <CreateDialog setStep={setStep} ownerId={me.me!.id} />
+          <CreateDialog setStep={handleSetStep} ownerId={me.me!.id} />
         )}
-        {step === "final" && (
-          <FinalDialog
-            organizationName={me.me?.organization?.name || "Your Organization"}
-          />
-        )}
-        {step === "join" && <JoinDialog setStep={setStep} />}
+        {step === "join" && <JoinDialog setStep={handleSetStep} />}
+        {step === "final" && <FinalDialog organizationData={stepData} />}
       </DialogContent>
     </Dialog>
   );

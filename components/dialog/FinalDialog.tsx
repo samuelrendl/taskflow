@@ -5,23 +5,33 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
-import { FinalDialogProps } from "@/lib/types";
+import { useDispatch } from "react-redux";
+import { updateOrganization } from "@/lib/store/meSlice";
 
-const FinalDialog = ({ organizationName }: FinalDialogProps) => {
+const FinalDialog = ({ organizationData }) => {
+  const dispatch = useDispatch();
+  const organizationName = organizationData?.name;
+
+  const handleClose = () => {
+    if (organizationData) {
+      dispatch(updateOrganization(organizationData));
+    }
+  };
+  
   return (
     <>
       <DialogHeader>
         <DialogTitle>Congratulation!</DialogTitle>
         <DialogDescription>
-          Your {organizationName} organization is ready. You can now invite
-          members or start creating tasks.
+          {organizationName
+            ? `You have successfully created ${organizationName}`
+            : "You have successfully created an organization."}
         </DialogDescription>
       </DialogHeader>
       <div>
         <DialogClose asChild>
-          <Button variant="outline">Close</Button>
+          <Button variant="outline" onClick={handleClose}>Close</Button>
         </DialogClose>
-
       </div>
     </>
   );

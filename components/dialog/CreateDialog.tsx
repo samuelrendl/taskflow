@@ -21,12 +21,14 @@ const CreateDialog = ({ ownerId, setStep }: CreateDialogProps) => {
     setError(null);
 
     try {
-      await createOrganization(orgName, ownerId);
-      setStep("final"); // TODO: Create a final step
+      const response = await createOrganization(orgName, ownerId);
+      setStep("final", response.createOrganization);
     } catch (err) {
-      setError(
-        err.message || "Failed to create organization. Please try again.",
-      );
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Failed to create organization. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
