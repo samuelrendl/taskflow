@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Me } from "../types";
+import { Me, Organization } from "../types";
 
 interface MeState {
   me: Me | null;
@@ -20,8 +20,13 @@ const meSlice = createSlice({
     clearMe: (state) => {
       state.me = null;
     },
+    updateOrganization: (state, action: PayloadAction<Organization>) => {
+      if (state.me) {
+        state.me.organization = action.payload;
+      }
+    },
   },
 });
 
-export const { setMe, clearMe } = meSlice.actions;
+export const { setMe, clearMe, updateOrganization } = meSlice.actions;
 export default meSlice.reducer;

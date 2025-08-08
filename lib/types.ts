@@ -9,7 +9,15 @@ export type MeResponse = {
   };
 };
 
+export type CreateOrgResponse = {
+  createOrganization: {
+    id: string;
+    name: string;
+  };
+};
+
 export type Organization = {
+  id: string;
   name: string;
 };
 
@@ -21,21 +29,10 @@ export type Me = {
 };
 
 export type setTypeProps = {
-  setStep: (step: "initial" | "create" | "join" | "final") => void;
+  setStep: (step: "initial" | "create" | "join" | "final", data?: Organization) => void;
 };
 
 export type CreateDialogProps = {
   ownerId: string;
   setStep: setTypeProps["setStep"];
-};
-
-export type FinalDialogProps = {
-  organizationName: string;
-};
-
-export type CreateOrgResponse = {
-  createOrganization: {
-    id: string;
-    name: string;
-  };
 };
