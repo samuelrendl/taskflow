@@ -9,20 +9,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
-interface UserProps {
-  name?: string | null;
-  image?: string | null;
-}
-
-const UserButton = ({ user }: { user: UserProps }) => {
+const UserButton = () => {
+  const { data: session } = useSession();
+  const user = session?.user;
+  if (!user) return null;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="cursor-pointer">
           <Avatar>
-            <AvatarImage src={user.image ?? undefined} />
+            <AvatarImage
+              src={user.image ?? undefined}
+              alt={user.name ?? undefined}
+            />
             <AvatarFallback>USER</AvatarFallback>
           </Avatar>
         </div>

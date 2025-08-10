@@ -14,9 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
 import UserButton from "./UserButton";
-import { useMe } from "@/hooks/useMe";
-import { useSession } from "next-auth/react";
-import OrgDialog from "./dialog/OrgDialog";
+import OrgButton from "./OrgButton";
 
 const items = [
   {
@@ -47,22 +45,14 @@ const items = [
 ];
 
 const SidebarNav = () => {
-  const { data: session } = useSession();
-  const user = session?.user;
-  const me = useMe();
-
-  if (!user) return null;
-
   return (
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader>
-        <h1 className="text-lg font-semibold">
-          {me.me?.organization?.name ?? <OrgDialog userHasOrg={false} />}
-        </h1>
+        <OrgButton />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />
-        <SidebarGroupLabel>BLA BLA</SidebarGroupLabel>
+        <SidebarGroupLabel>Teams</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
             {items.map((item) => (
@@ -80,7 +70,7 @@ const SidebarNav = () => {
         <SidebarGroup />
       </SidebarContent>
       <SidebarFooter>
-        <UserButton user={user} />
+        <UserButton />
       </SidebarFooter>
     </Sidebar>
   );

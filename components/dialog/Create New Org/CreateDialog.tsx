@@ -3,9 +3,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { CreateDialogProps } from "@/lib/types";
-import { Input } from "../ui/input";
+import { Input } from "../../ui/input";
 import { useState } from "react";
 import { createOrganization } from "@/lib/api";
 

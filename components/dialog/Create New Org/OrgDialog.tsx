@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { useEffect, useState } from "react";
 import InitialDialog from "./InitialDialog";
 import CreateDialog from "./CreateDialog";

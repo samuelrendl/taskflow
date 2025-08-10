@@ -11,7 +11,7 @@ export const fetchMe = async () => {
           email
           organization {
             name
-          }
+            }
         }
       }
     `,

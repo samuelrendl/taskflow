@@ -9,6 +9,7 @@ generator client {
 
 enum Role {
   ADMIN
+  OWNER
   MANAGER
   DEVELOPER
   USER
@@ -18,6 +19,7 @@ enum IssueStatus {
   OPEN
   IN_PROGRESS
   CLOSED
+  UNASSIGNED
 }
 
 enum IssuePriority {
@@ -61,6 +63,7 @@ model Team {
   id String @id @default(cuid())
   name String
   users User[] @relation("TeamUsers")
+  issues Issue[] @relation("TeamIssues")
   organizationId String
   organization Organization @relation(fields: [organizationId], references: [id])
 }
@@ -77,6 +80,8 @@ model Issue {
   createdBy     User      @relation("CreatedIssues", fields: [createdById], references: [id])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  teamId        String?   
+  team          Team?     @relation("TeamIssues", fields: [teamId], references: [id])
 }
  
 model Account {

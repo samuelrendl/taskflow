@@ -5,16 +5,18 @@ export const typeDefs = `#graphql
   scalar DateTime
 
   enum Role {
-    USER
     ADMIN
+    OWNER
     MANAGER
     DEVELOPER
+    USER
   }
 
   enum IssueStatus {
     OPEN
     IN_PROGRESS
     CLOSED
+    UNASSIGNED
   }
 
   enum IssuePriority {
@@ -55,6 +57,7 @@ export const typeDefs = `#graphql
     name: String!
     users: [User!]!
     organization: Organization!
+    issuesAssigned: [Issue!]!
   }
 
   type Issue {
@@ -67,6 +70,7 @@ export const typeDefs = `#graphql
     createdBy: User!
     createdAt: DateTime!
     updatedAt: DateTime!
+    team: Team
   }
 
   type Query {

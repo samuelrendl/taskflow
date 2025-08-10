@@ -4,7 +4,7 @@ import {
   DialogTitle,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import { useDispatch } from "react-redux";
 import { updateOrganization } from "@/lib/store/meSlice";
 
@@ -17,7 +17,7 @@ const FinalDialog = ({ organizationData }) => {
       dispatch(updateOrganization(organizationData));
     }
   };
-  
+
   return (
     <>
       <DialogHeader>
@@ -30,7 +30,9 @@ const FinalDialog = ({ organizationData }) => {
       </DialogHeader>
       <div>
         <DialogClose asChild>
-          <Button variant="outline" onClick={handleClose}>Close</Button>
+          <Button variant="outline" onClick={handleClose}>
+            Close
+          </Button>
         </DialogClose>
       </div>
     </>
