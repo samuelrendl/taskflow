@@ -34,7 +34,9 @@ const OrgButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={"outline"} className="font-bold">{me.me?.organization?.name}</Button>
+        <Button variant={"outline"} className="font-bold">
+          {me.me?.organization?.name}
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My organization</DropdownMenuLabel>

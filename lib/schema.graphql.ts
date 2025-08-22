@@ -84,6 +84,7 @@ export const typeDefs = `#graphql
 
   type Mutation {
     createOrganization(name: String! ownerId: String!): Organization!
+    deleteOrganization(id: String!): Organization!
   }
 `;
 
@@ -164,6 +165,61 @@ export const resolvers = {
         include: {
           owner: true,
           users: true,
+        },
+      });
+    },
+    deleteOrganization: async (
+      _parent: unknown,
+      args: { id: string },
+      context: GraphQLContext,
+    ) => {
+      const session = await auth();
+      if (!session || !session.user?.email) {
+        throw new Error("Authentication required");
+      }
+
+      const currentUser = await context.prisma.user.findUnique({
+        where: { email: session.user.email },
+      });
+
+      if (!currentUser) {
+        throw new Error("User not found");
+      }
+
+      const organization = await context.prisma.organization.findUnique({
+        where: { id: args.id },
+        select: { ownerId: true },
+      });
+
+      if (!organization) {
+        throw new Error("Organization not found");
+      }
+
+      if (organization.ownerId !== currentUser.id) {
+        throw new Error(
+          "Only the organization owner can delete the organization",
+        );
+      }
+
+      await context.prisma.issue.deleteMany({
+        where: {
+          team: {
+            organizationId: args.id,
+          },
+        },
+      });
+
+      await context.prisma.team.deleteMany({
+        where: {
+          organizationId: args.id,
+        },
+      });
+
+      return context.prisma.organization.delete({
+        where: { id: args.id },
+        include: {
+          owner: true,
+          teams: true,
         },
       });
     },

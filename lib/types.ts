@@ -9,13 +9,6 @@ export type MeResponse = {
   };
 };
 
-export type CreateOrgResponse = {
-  createOrganization: {
-    id: string;
-    name: string;
-  };
-};
-
 export type Organization = {
   id: string;
   name: string;

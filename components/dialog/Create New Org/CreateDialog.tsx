@@ -22,7 +22,7 @@ const CreateDialog = ({ ownerId, setStep }: CreateDialogProps) => {
 
     try {
       const response = await createOrganization(orgName, ownerId);
-      setStep("final", response.createOrganization);
+      setStep("final", response);
     } catch (err) {
       const errorMessage =
         err instanceof Error

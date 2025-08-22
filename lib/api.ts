@@ -1,5 +1,5 @@
 import { graphqlRequest } from "./graphqlRequest";
-import { CreateOrgResponse, MeResponse } from "./types";
+import { Organization, MeResponse } from "./types";
 
 export const fetchMe = async () => {
   const data = await graphqlRequest<MeResponse>({
@@ -20,7 +20,7 @@ export const fetchMe = async () => {
 };
 
 export const createOrganization = async (name: string, ownerId: string) => {
-  return graphqlRequest<CreateOrgResponse>({
+  return graphqlRequest<Organization>({
     query: `
       mutation CreateOrganization($name: String!, $ownerId: String!) {
         createOrganization(name: $name, ownerId: $ownerId) {
@@ -36,6 +36,22 @@ export const createOrganization = async (name: string, ownerId: string) => {
     variables: {
       name,
       ownerId,
+    },
+  });
+};
+
+export const deleteOrganization = async (id: string) => {
+  return graphqlRequest<Organization>({
+    query: `
+      mutation DeleteOrganization($id: String!) {
+        deleteOrganization(id: $id) {
+          id
+          name
+        }
+      }
+    `,
+    variables: {
+      id,
     },
   });
 };

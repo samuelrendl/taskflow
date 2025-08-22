@@ -18,8 +18,8 @@ import OrgButton from "./OrgButton";
 
 const items = [
   {
-    title: "Home",
-    url: "#",
+    title: "Dashboard",
+    url: "/dashboard",
     icon: Home,
   },
   {

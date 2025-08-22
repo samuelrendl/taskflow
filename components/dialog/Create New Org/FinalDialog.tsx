@@ -7,8 +7,13 @@ import {
 import { Button } from "../../ui/button";
 import { useDispatch } from "react-redux";
 import { updateOrganization } from "@/lib/store/meSlice";
+import { Organization } from "@/lib/types";
 
-const FinalDialog = ({ organizationData }) => {
+const FinalDialog = ({
+  organizationData,
+}: {
+  organizationData?: Organization;
+}) => {
   const dispatch = useDispatch();
   const organizationName = organizationData?.name;
 
