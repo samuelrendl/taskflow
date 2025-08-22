@@ -4,6 +4,7 @@ export type MeResponse = {
     name: string;
     email: string;
     organization: {
+      id: string;
       name: string;
     } | null;
   };

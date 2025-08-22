@@ -10,6 +10,7 @@ export const fetchMe = async () => {
           name
           email
           organization {
+            id
             name
             }
         }
@@ -20,7 +21,7 @@ export const fetchMe = async () => {
 };
 
 export const createOrganization = async (name: string, ownerId: string) => {
-  return graphqlRequest<Organization>({
+  const data = await graphqlRequest<{createOrganization: Organization}>({
     query: `
       mutation CreateOrganization($name: String!, $ownerId: String!) {
         createOrganization(name: $name, ownerId: $ownerId) {
@@ -38,10 +39,11 @@ export const createOrganization = async (name: string, ownerId: string) => {
       ownerId,
     },
   });
+  return data.createOrganization;
 };
 
 export const deleteOrganization = async (id: string) => {
-  return graphqlRequest<Organization>({
+  const data = await graphqlRequest<{deleteOrganization: Organization}>({
     query: `
       mutation DeleteOrganization($id: String!) {
         deleteOrganization(id: $id) {
@@ -54,4 +56,5 @@ export const deleteOrganization = async (id: string) => {
       id,
     },
   });
+  return data.deleteOrganization;
 };

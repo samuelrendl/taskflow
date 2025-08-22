@@ -47,7 +47,7 @@ const OrgDialog = ({ userHasOrg }: { userHasOrg: boolean }) => {
           <CreateDialog setStep={handleSetStep} ownerId={me.me!.id} />
         )}
         {step === "join" && <JoinDialog setStep={handleSetStep} />}
-        {step === "final" && <FinalDialog organizationData={stepData} />}
+        {step === "final" && <FinalDialog organizationData={stepData || undefined} />}
       </DialogContent>
     </Dialog>
   );
