@@ -49,7 +49,7 @@ const CreateDialog = ({ ownerId, setStep }: CreateDialogProps) => {
         onChange={(e) => setOrgName(e.target.value)}
       />
       {error && <p className="text-red-500">{error}</p>}
-      <div>
+      <div className="flex justify-between">
         <Button variant="outline" onClick={() => setStep("initial")}>
           Back
         </Button>

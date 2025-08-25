@@ -14,9 +14,11 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <DashboardLoader />
       <SidebarProvider>
         <SidebarNav />
-        <main>
+        <main className="h-dvh w-full overflow-hidden flex flex-col">
           <SidebarTrigger />
-          {children}
+          <div className="flex-1 overflow-auto">
+            {children}
+          </div>
         </main>
       </SidebarProvider>
     </Provider>

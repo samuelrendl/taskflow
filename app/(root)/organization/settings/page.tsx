@@ -1,19 +1,9 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { useMe } from "@/hooks/useMe";
-import { deleteOrganization } from "@/lib/api";
+import DeleteOrgDialog from "@/components/dialog/DeleteOrgDialog";
 
 const Settings = () => {
-  const me = useMe();
   return (
-    <div>
-      <Button
-        variant={"destructive"}
-        onClick={() => deleteOrganization(me.me!.organization!.id)}
-      >
-        Delete Organization
-      </Button>
+    <div className="flex h-full w-full items-center justify-center">
+      <DeleteOrgDialog />
     </div>
   );
 };
