@@ -9,6 +9,7 @@ export const fetchMe = async () => {
           id
           name
           email
+          role
           organization {
             id
             name

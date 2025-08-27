@@ -3,6 +3,7 @@ export type MeResponse = {
     id: string;
     name: string;
     email: string;
+    role: string;
     organization: {
       id: string;
       name: string;
@@ -19,6 +20,7 @@ export type Me = {
   id: string;
   name: string;
   email: string;
+  role: string;
   organization: Organization | null;
 };
 

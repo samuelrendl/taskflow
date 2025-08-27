@@ -17,6 +17,8 @@ import { useMe } from "@/hooks/useMe";
 
 const DeleteOrgDialog = () => {
   const me = useMe();
+  const isUserOwner = me.me?.role === "OWNER";
+
   const handleDelete = () => {
     try {
       deleteOrganization(me.me!.organization!.id);
@@ -30,7 +32,9 @@ const DeleteOrgDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant={"destructive"}>Delete Organization</Button>
+        <Button variant={"destructive"} disabled={!isUserOwner}>
+          Delete Organization
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -40,7 +44,7 @@ const DeleteOrgDialog = () => {
             organization and remove your data from our servers.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter className="flex justify-between">
+        <DialogFooter className="sm:justify-between">
           <DialogClose asChild>
             <Button variant={"outline"}>Cancel</Button>
           </DialogClose>

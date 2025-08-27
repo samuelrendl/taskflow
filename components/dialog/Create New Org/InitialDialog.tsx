@@ -17,7 +17,7 @@ const InitialDialog = ({ setStep }: setTypeProps) => {
           Choose how you’d like to get started.
         </DialogDescription>
       </DialogHeader>
-      <div>
+      <div className="flex justify-between">
         <Button variant="outline" onClick={() => setStep("create")}>
           Create Organization
         </Button>
