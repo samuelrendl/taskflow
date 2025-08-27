@@ -148,25 +148,34 @@ export const resolvers = {
       args: { name: string; ownerId: string },
       context: GraphQLContext,
     ) => {
-      return context.prisma.organization.create({
-        data: {
-          name: args.name,
-          owner: {
-            connect: {
-              id: args.ownerId,
+      const result = await context.prisma.$transaction(async (prisma) => {
+        await prisma.user.update({
+          where: { id: args.ownerId },
+          data: { role: 'OWNER' }
+        });
+
+        return prisma.organization.create({
+          data: {
+            name: args.name,
+            owner: {
+              connect: {
+                id: args.ownerId,
+              },
+            },
+            users: {
+              connect: {
+                id: args.ownerId,
+              },
             },
           },
-          users: {
-            connect: {
-              id: args.ownerId,
-            },
+          include: {
+            owner: true,
+            users: true,
           },
-        },
-        include: {
-          owner: true,
-          users: true,
-        },
+        });
       });
+
+      return result;
     },
     deleteOrganization: async (
       _parent: unknown,
@@ -215,13 +224,24 @@ export const resolvers = {
         },
       });
 
-      return context.prisma.organization.delete({
-        where: { id: args.id },
-        include: {
-          owner: true,
-          teams: true,
-        },
+      const result = await context.prisma.$transaction(async (prisma) => {
+        const deletedOrg = await prisma.organization.delete({
+          where: { id: args.id },
+          include: {
+            owner: true,
+            teams: true,
+          },
+        });
+
+        await prisma.user.update({
+          where: { id: organization.ownerId },
+          data: { role: 'USER' }
+        });
+
+        return deletedOrg;
       });
+
+      return result;
     },
   },
 };
