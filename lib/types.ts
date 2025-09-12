@@ -14,6 +14,25 @@ export type MeResponse = {
 export type Organization = {
   id: string;
   name: string;
+  owner: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  users: User[];
+  teams: {
+    id: string;
+    name: string;
+  }[];
+};
+
+export type User = {
+  id: string;
+  name: string | null;
+  email: string;
+  role: string;
+  image: string | null;
+  createdAt: string;
 };
 
 export type Me = {
@@ -21,7 +40,10 @@ export type Me = {
   name: string;
   email: string;
   role: string;
-  organization: Organization | null;
+  organization: {
+    id: string;
+    name: string;
+  } | null;
 };
 
 export type setTypeProps = {

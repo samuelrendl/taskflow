@@ -12,9 +12,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
+import { Home, Inbox, } from "lucide-react";
 import UserButton from "./UserButton";
 import OrgButton from "./OrgButton";
+import NewTask from "./NewTask";
 
 const items = [
   {
@@ -23,24 +24,9 @@ const items = [
     icon: Home,
   },
   {
-    title: "Inbox",
+    title: "My Tasks",
     url: "#",
     icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
   },
 ];
 
@@ -49,6 +35,7 @@ const SidebarNav = () => {
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader>
         <OrgButton />
+        <NewTask />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />

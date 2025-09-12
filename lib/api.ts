@@ -1,5 +1,5 @@
 import { graphqlRequest } from "./graphqlRequest";
-import { Organization, MeResponse } from "./types";
+import { Organization, MeResponse, User } from "./types";
 
 export const fetchMe = async () => {
   const data = await graphqlRequest<MeResponse>({
@@ -22,7 +22,7 @@ export const fetchMe = async () => {
 };
 
 export const createOrganization = async (name: string, ownerId: string) => {
-  const data = await graphqlRequest<{createOrganization: Organization}>({
+  const data = await graphqlRequest<{ createOrganization: Organization }>({
     query: `
       mutation CreateOrganization($name: String!, $ownerId: String!) {
         createOrganization(name: $name, ownerId: $ownerId) {
@@ -44,7 +44,7 @@ export const createOrganization = async (name: string, ownerId: string) => {
 };
 
 export const deleteOrganization = async (id: string) => {
-  const data = await graphqlRequest<{deleteOrganization: Organization}>({
+  const data = await graphqlRequest<{ deleteOrganization: Organization }>({
     query: `
       mutation DeleteOrganization($id: String!) {
         deleteOrganization(id: $id) {
@@ -58,4 +58,96 @@ export const deleteOrganization = async (id: string) => {
     },
   });
   return data.deleteOrganization;
+};
+
+export const fetchOrganization = async (id: string) => {
+  const data = await graphqlRequest<{ organization: Organization }>({
+    query: `
+      query GetOrganization($id: String!) {
+        organization(id: $id) {
+          id
+          name
+          owner {
+            id
+            name
+            email
+          }
+          users {
+            id
+            name
+            email
+            role
+            image
+            createdAt
+          }
+          teams {
+            id
+            name
+          }
+        }
+      }
+    `,
+    variables: {
+      id,
+    },
+  });
+  return data.organization;
+};
+
+export const fetchAvailableUsers = async () => {
+  const data = await graphqlRequest<{ users: User[] }>({
+    query: `
+      query {
+        users {
+          id
+          name
+          email
+          image
+        }
+      }
+    `,
+  });
+  return data.users;
+};
+
+export const inviteUserToOrganization = async (
+  userId: string,
+  organizationId: string,
+) => {
+  const data = await graphqlRequest<{ inviteUserToOrganization: User }>({
+    query: `
+      mutation InviteUserToOrganization($userId: String!, $organizationId: String!) {
+        inviteUserToOrganization(userId: $userId, organizationId: $organizationId) {
+          id
+          name
+          email
+          role
+        }
+      }
+    `,
+    variables: {
+      userId,
+      organizationId,
+    },
+  });
+  return data.inviteUserToOrganization;
+};
+
+export const inviteUserToTeam = async (userId: string, teamId: string) => {
+  const data = await graphqlRequest<{ inviteUserToTeam: User }>({
+    query: `
+      mutation InviteUserToTeam($userId: String!, $teamId: String!) {
+        inviteUserToTeam(userId: $userId, teamId: $teamId) {
+          id
+          name
+          email
+          role
+          }
+        }`,
+    variables: {
+      userId,
+      teamId,
+    },
+  });
+  return data.inviteUserToTeam;
 };

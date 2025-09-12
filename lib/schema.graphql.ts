@@ -80,11 +80,13 @@ export const typeDefs = `#graphql
     issues: [Issue!]!
     me: User
     user(id: String!): User
+    organization(id: String!): Organization
   }
 
   type Mutation {
     createOrganization(name: String! ownerId: String!): Organization!
     deleteOrganization(id: String!): Organization!
+    inviteUserToOrganization(userId: String!, organizationId: String!): User!
   }
 `;
 
@@ -137,6 +139,23 @@ export const resolvers = {
         where: { id: args.id },
         include: {
           organization: true,
+        },
+      });
+    },
+
+    organization: async (
+      _parent: unknown,
+      args: { id: string },
+      context: GraphQLContext,
+    ) => {
+      return context.prisma.organization.findUnique({
+        where: { id: args.id },
+        include: {
+          owner: true,
+          users: {
+            orderBy: { createdAt: 'asc' },
+          },
+          teams: true,
         },
       });
     },
@@ -242,6 +261,63 @@ export const resolvers = {
       });
 
       return result;
+    },
+
+    inviteUserToOrganization: async (
+      _parent: unknown,
+      args: { userId: string; organizationId: string },
+      context: GraphQLContext,
+    ) => {
+      const session = await auth();
+      if (!session || !session.user?.email) {
+        throw new Error("Authentication required");
+      }
+
+      const currentUser = await context.prisma.user.findUnique({
+        where: { email: session.user.email },
+      });
+
+      if (!currentUser) {
+        throw new Error("User not found");
+      }
+
+      const organization = await context.prisma.organization.findUnique({
+        where: { id: args.organizationId },
+        select: { ownerId: true },
+      });
+
+      if (!organization) {
+        throw new Error("Organization not found");
+      }
+
+      if (organization.ownerId !== currentUser.id) {
+        throw new Error("Only the organization owner can invite users");
+      }
+
+      const existingUser = await context.prisma.user.findUnique({
+        where: { id: args.userId },
+        select: { organizationId: true },
+      });
+
+      if (!existingUser) {
+        throw new Error("User to invite not found");
+      }
+
+      if (existingUser.organizationId) {
+        throw new Error("User is already part of an organization");
+      }
+
+      const updatedUser = await context.prisma.user.update({
+        where: { id: args.userId },
+        data: {
+          organizationId: args.organizationId,
+        },
+        include: {
+          organization: true,
+        },
+      });
+
+      return updatedUser;
     },
   },
 };

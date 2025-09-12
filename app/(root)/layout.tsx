@@ -7,19 +7,26 @@ import DashboardLoader from "@/components/DashboardLoader";
 import SidebarNav from "@/components/SidebarNav";
 import { Provider } from "react-redux";
 import { store } from "@/lib/store";
+import { redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { Toaster } from "sonner";
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const { data: session, status } = useSession();
+
+  if (status === "loading") return <div>Loading...</div>;
+  if (!session?.user) return redirect("/");
+
   return (
     <Provider store={store}>
       <DashboardLoader />
       <SidebarProvider>
         <SidebarNav />
-        <main className="h-dvh w-full overflow-hidden flex flex-col">
+        <main className="flex h-dvh w-full flex-col overflow-hidden">
           <SidebarTrigger />
-          <div className="flex-1 overflow-auto">
-            {children}
-          </div>
+          <div className="flex-1 overflow-auto">{children}</div>
         </main>
+        <Toaster position="bottom-right"/>
       </SidebarProvider>
     </Provider>
   );

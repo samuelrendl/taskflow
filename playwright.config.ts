@@ -25,7 +25,7 @@ export default defineConfig({
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   webServer: {
-    command: "npm run build && npm run start",
+    command: "npm run start:test",
     port: 3000,
     reuseExistingServer: !process.env.CI,
   },
