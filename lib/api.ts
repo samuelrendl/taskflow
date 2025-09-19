@@ -133,6 +133,21 @@ export const inviteUserToOrganization = async (
   return data.inviteUserToOrganization;
 };
 
+export const removeUserFromOrganization = async (userId: string) => {
+  const data = await graphqlRequest<{ removeUserFromOrganization: User }>({
+    query: `
+      mutation RemoveUserFromOrganization($userId: String!) {
+        removeUserFromOrganization(userId: $userId) {
+          id
+          name
+        }}`,
+    variables: {
+      userId,
+    },
+  });
+  return data.removeUserFromOrganization;
+};
+
 export const inviteUserToTeam = async (userId: string, teamId: string) => {
   const data = await graphqlRequest<{ inviteUserToTeam: User }>({
     query: `

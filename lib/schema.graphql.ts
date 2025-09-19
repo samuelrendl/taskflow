@@ -1,6 +1,23 @@
 import { GraphQLContext } from "./context";
 import { auth } from "../auth";
 
+const getCurrentUser = async (context: GraphQLContext) => {
+  const session = await auth();
+  if (!session?.user?.email) {
+    throw new Error("Authentication required");
+  }
+
+  const user = await context.prisma.user.findUnique({
+    where: { email: session.user.email },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user;
+};
+
 export const typeDefs = `#graphql
   scalar DateTime
 
@@ -87,6 +104,7 @@ export const typeDefs = `#graphql
     createOrganization(name: String! ownerId: String!): Organization!
     deleteOrganization(id: String!): Organization!
     inviteUserToOrganization(userId: String!, organizationId: String!): User!
+    removeUserFromOrganization(userId: String!): User!
   }
 `;
 
@@ -153,7 +171,7 @@ export const resolvers = {
         include: {
           owner: true,
           users: {
-            orderBy: { createdAt: 'asc' },
+            orderBy: { createdAt: "asc" },
           },
           teams: true,
         },
@@ -167,25 +185,17 @@ export const resolvers = {
       args: { name: string; ownerId: string },
       context: GraphQLContext,
     ) => {
-      const result = await context.prisma.$transaction(async (prisma) => {
+      return context.prisma.$transaction(async (prisma) => {
         await prisma.user.update({
           where: { id: args.ownerId },
-          data: { role: 'OWNER' }
+          data: { role: "OWNER" },
         });
 
         return prisma.organization.create({
           data: {
             name: args.name,
-            owner: {
-              connect: {
-                id: args.ownerId,
-              },
-            },
-            users: {
-              connect: {
-                id: args.ownerId,
-              },
-            },
+            ownerId: args.ownerId,
+            users: { connect: { id: args.ownerId } },
           },
           include: {
             owner: true,
@@ -193,131 +203,108 @@ export const resolvers = {
           },
         });
       });
-
-      return result;
     },
     deleteOrganization: async (
       _parent: unknown,
       args: { id: string },
       context: GraphQLContext,
     ) => {
-      const session = await auth();
-      if (!session || !session.user?.email) {
-        throw new Error("Authentication required");
-      }
-
-      const currentUser = await context.prisma.user.findUnique({
-        where: { email: session.user.email },
-      });
-
-      if (!currentUser) {
-        throw new Error("User not found");
-      }
-
-      const organization = await context.prisma.organization.findUnique({
+      const currentUser = await getCurrentUser(context);
+      
+      const organization = await context.prisma.organization.findUniqueOrThrow({
         where: { id: args.id },
         select: { ownerId: true },
       });
 
-      if (!organization) {
-        throw new Error("Organization not found");
-      }
-
       if (organization.ownerId !== currentUser.id) {
-        throw new Error(
-          "Only the organization owner can delete the organization",
-        );
+        throw new Error("Only the organization owner can delete the organization");
       }
 
-      await context.prisma.issue.deleteMany({
-        where: {
-          team: {
-            organizationId: args.id,
-          },
-        },
-      });
+      return context.prisma.$transaction(async (prisma) => {
+        await prisma.issue.deleteMany({
+          where: { team: { organizationId: args.id } },
+        });
 
-      await context.prisma.team.deleteMany({
-        where: {
-          organizationId: args.id,
-        },
-      });
+        await prisma.team.deleteMany({
+          where: { organizationId: args.id },
+        });
 
-      const result = await context.prisma.$transaction(async (prisma) => {
         const deletedOrg = await prisma.organization.delete({
           where: { id: args.id },
-          include: {
-            owner: true,
-            teams: true,
-          },
+          include: { owner: true },
         });
 
         await prisma.user.update({
           where: { id: organization.ownerId },
-          data: { role: 'USER' }
+          data: { role: "USER" },
         });
 
         return deletedOrg;
       });
-
-      return result;
     },
-
     inviteUserToOrganization: async (
       _parent: unknown,
       args: { userId: string; organizationId: string },
       context: GraphQLContext,
     ) => {
-      const session = await auth();
-      if (!session || !session.user?.email) {
-        throw new Error("Authentication required");
-      }
-
-      const currentUser = await context.prisma.user.findUnique({
-        where: { email: session.user.email },
-      });
-
-      if (!currentUser) {
-        throw new Error("User not found");
-      }
-
-      const organization = await context.prisma.organization.findUnique({
+      const currentUser = await getCurrentUser(context);
+      
+      const organization = await context.prisma.organization.findUniqueOrThrow({
         where: { id: args.organizationId },
         select: { ownerId: true },
       });
-
-      if (!organization) {
-        throw new Error("Organization not found");
-      }
 
       if (organization.ownerId !== currentUser.id) {
         throw new Error("Only the organization owner can invite users");
       }
 
-      const existingUser = await context.prisma.user.findUnique({
+      const userToInvite = await context.prisma.user.findUniqueOrThrow({
         where: { id: args.userId },
         select: { organizationId: true },
       });
 
-      if (!existingUser) {
-        throw new Error("User to invite not found");
-      }
-
-      if (existingUser.organizationId) {
+      if (userToInvite.organizationId) {
         throw new Error("User is already part of an organization");
       }
 
-      const updatedUser = await context.prisma.user.update({
+      return context.prisma.user.update({
         where: { id: args.userId },
-        data: {
-          organizationId: args.organizationId,
-        },
-        include: {
-          organization: true,
-        },
+        data: { organizationId: args.organizationId },
+        include: { organization: true },
+      });
+    },
+    removeUserFromOrganization: async (
+      _parent: unknown,
+      args: { userId: string },
+      context: GraphQLContext,
+    ) => {
+      const currentUser = await getCurrentUser(context);
+
+      const userToRemove = await context.prisma.user.findUniqueOrThrow({
+        where: { id: args.userId },
+        select: { organizationId: true },
       });
 
-      return updatedUser;
+      if (!userToRemove.organizationId) {
+        throw new Error("User is not in an organization");
+      }
+
+      const organization = await context.prisma.organization.findUniqueOrThrow({
+        where: { id: userToRemove.organizationId },
+        select: { ownerId: true },
+      });
+
+      if (organization.ownerId !== currentUser.id) {
+        throw new Error("Only the organization owner can remove users");
+      }
+
+      return context.prisma.user.update({
+        where: { id: args.userId },
+        data: {
+          organizationId: null,
+          teamId: null,
+        },
+      });
     },
   },
 };
