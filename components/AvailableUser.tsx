@@ -2,7 +2,7 @@ import { User } from "@/lib/types";
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import { inviteUserToOrganization } from "@/lib/api";
+import { inviteUserToOrganization, inviteUserToTeam } from "@/lib/api";
 import { toast } from "sonner";
 
 interface AvailableUserProps extends User {
@@ -28,11 +28,16 @@ const AvailableUser = ({
     try {
       if (inviteType === "organization") {
         await inviteUserToOrganization(user.id, organizationId);
-        toast.success(`Successfully invited user ${user.name} to organization`);
+        toast.success(
+          `Successfully invited user ${user.name} to organization.`,
+        );
       } else if (inviteType === "team") {
-        // TODO: Add actual team invite API call here
-        // await inviteUserToTeam(user.id, teamId);
-        console.log(`Inviting user ${user.id} to team ${teamId}`);
+        if (!teamId) {
+          toast.error("Team ID is missing. Cannot invite user to the team.");
+          return;
+        }
+        await inviteUserToTeam(user.id, teamId);
+        toast.success(`Successfully invited user ${user.name} to the team.`);
       }
 
       onInvited?.();

@@ -1,5 +1,5 @@
 import { graphqlRequest } from "./graphqlRequest";
-import { Organization, MeResponse, User } from "./types";
+import { Organization, MeResponse, User, Team } from "./types";
 
 export const fetchMe = async () => {
   const data = await graphqlRequest<MeResponse>({
@@ -122,6 +122,10 @@ export const inviteUserToOrganization = async (
           name
           email
           role
+          organization {
+            id
+            name
+          }
         }
       }
     `,
@@ -140,12 +144,70 @@ export const removeUserFromOrganization = async (userId: string) => {
         removeUserFromOrganization(userId: $userId) {
           id
           name
-        }}`,
+          organization {
+            id
+            name
+          }
+          team {
+            id
+            name
+          }
+        }
+      }`,
     variables: {
       userId,
     },
   });
   return data.removeUserFromOrganization;
+};
+
+export const createTeam = async (name: string, organizationId: string) => {
+  const data = await graphqlRequest<{ createTeam: Team }>({
+    query: `
+      mutation CreateTeam($name: String!, $organizationId: String!) {
+        createTeam(name: $name, organizationId: $organizationId) {
+          id
+          name
+          users {
+            id
+            name
+          }
+          organization {
+            id
+            name
+          }
+        }
+      }`,
+    variables: {
+      name,
+      organizationId,
+    },
+  });
+  return data.createTeam;
+};
+
+export const deleteTeam = async (id: string) => {
+  const data = await graphqlRequest<{ deleteTeam: Team }>({
+    query: `
+      mutation DeleteTeam($id: String!) {
+        deleteTeam(id: $id) {
+          id
+          name
+          users {
+            id
+            name
+          }
+          organization {
+            id
+            name
+          }
+        }
+      }`,
+    variables: {
+      id,
+    },
+  });
+  return data.deleteTeam;
 };
 
 export const inviteUserToTeam = async (userId: string, teamId: string) => {
@@ -157,12 +219,36 @@ export const inviteUserToTeam = async (userId: string, teamId: string) => {
           name
           email
           role
+          team {
+            id
+            name
           }
-        }`,
+        }
+      }`,
     variables: {
       userId,
       teamId,
     },
   });
   return data.inviteUserToTeam;
+};
+
+export const removeUserFromTeam = async (userId: string) => {
+  const data = await graphqlRequest<{ removeUserFromTeam: User }>({
+    query: `
+      mutation RemoveUserFromTeam($userId: String!) {
+        removeUserFromTeam(userId: $userId) {
+          id
+          name
+          team {
+            id
+            name
+          }
+        }
+      }`,
+    variables: {
+      userId,
+    },
+  });
+  return data.removeUserFromTeam;
 };
