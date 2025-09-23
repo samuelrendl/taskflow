@@ -6,16 +6,16 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Home, Inbox, } from "lucide-react";
+import { Home, Inbox } from "lucide-react";
 import UserButton from "./UserButton";
 import OrgButton from "./OrgButton";
 import NewTask from "./NewTask";
+import TeamsCombo from "./TeamsCombo";
 
 const items = [
   {
@@ -35,11 +35,11 @@ const SidebarNav = () => {
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader>
         <OrgButton />
+        <TeamsCombo />
         <NewTask />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />
-        <SidebarGroupLabel>Teams</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
             {items.map((item) => (

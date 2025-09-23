@@ -35,5 +35,6 @@ const meSlice = createSlice({
   },
 });
 
-export const { setMe, clearMe, updateOrganization, setLoading } = meSlice.actions;
+export const { setMe, clearMe, updateOrganization, setLoading } =
+  meSlice.actions;
 export default meSlice.reducer;

@@ -4,9 +4,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "../../ui/button";
-import { setTypeProps } from "@/lib/types";
+import { BaseDialogProps, Organization } from "@/lib/types";
 
-const InitialDialog = ({ setStep }: setTypeProps) => {
+const InitialDialog = ({ setStep }: BaseDialogProps<Organization>) => {
   return (
     <>
       <DialogHeader>

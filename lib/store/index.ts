@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import meReducer from "./meSlice";
+import organizationSlice from "./organizationSlice";
 
 export const store = configureStore({
   reducer: {
     me: meReducer,
+    organization: organizationSlice,
   },
 });
 

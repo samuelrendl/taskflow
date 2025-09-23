@@ -1,14 +1,27 @@
+export type User = {
+  id: string;
+  name: string | null;
+  email: string;
+  role: string;
+  image: string | null;
+  createdAt: string;
+};
+
+export type OrganizationSummary = {
+  id: string;
+  name: string;
+};
+
+export type Me = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  organization: OrganizationSummary | null;
+};
+
 export type MeResponse = {
-  me: {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    organization: {
-      id: string;
-      name: string;
-    } | null;
-  };
+  me: Me;
 };
 
 export type Organization = {
@@ -26,13 +39,12 @@ export type Organization = {
   }[];
 };
 
-export type User = {
+export type Team = {
   id: string;
-  name: string | null;
-  email: string;
-  role: string;
-  image: string | null;
-  createdAt: string;
+  name: string;
+  users: User[];
+  organization: OrganizationSummary;
+  issuesAssigned?: Issue[];
 };
 
 export type Issue = {
@@ -48,36 +60,17 @@ export type Issue = {
   updatedAt: string;
 };
 
-export type Me = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  organization: {
-    id: string;
-    name: string;
-  } | null;
-};
+export type DialogStep = "initial" | "create" | "join" | "final";
 
-export type Team = {
-  id: string;
-  name: string;
-  users: User[];
-  organization: {
-    id: string;
-    name: string;
-  };
-  issuesAssigned?: Issue[];
-};
+export interface DialogStepHandler<T = Organization | Team> {
+  (step: DialogStep, data?: T): void;
+}
 
-export type setTypeProps = {
-  setStep: (
-    step: "initial" | "create" | "join" | "final",
-    data?: Organization,
-  ) => void;
-};
+export interface BaseDialogProps<T = Organization | Team> {
+  setStep: DialogStepHandler<T>;
+}
 
-export type CreateDialogProps = {
-  ownerId: string;
-  setStep: setTypeProps["setStep"];
-};
+export interface CreateDialogProps<T = Organization | Team> extends BaseDialogProps<T> {
+  ownerId?: string;
+  organizationId?: string;
+}

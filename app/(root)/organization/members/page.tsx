@@ -1,33 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { fetchOrganization } from "@/lib/api";
-import { useMe } from "@/hooks/useMe";
-import { Organization, User } from "@/lib/types";
+import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/store";
+import { User } from "@/lib/types";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import InviteMemberDialog from "@/components/dialog/InviteMemberDialog";
 
 const Members = () => {
-  const [organization, setOrganization] = useState<Organization | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { me } = useMe();
-
-  useEffect(() => {
-    const loadOrganization = async () => {
-      if (!me?.organization?.id) return;
-
-      try {
-        const org = await fetchOrganization(me.organization.id);
-        setOrganization(org);
-      } catch (error) {
-        console.error("Failed to fetch organization:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadOrganization();
-  }, [me?.organization?.id]);
+  const { organization, loading } = useSelector((state: RootState) => ({
+    organization: state.organization.organization,
+    loading: state.organization.loading,
+  }));
 
   if (loading) {
     return (

@@ -10,6 +10,7 @@ import { store } from "@/lib/store";
 import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Toaster } from "sonner";
+import OrganizationLoader from "@/components/OrganizationLoader";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const { data: session, status } = useSession();
@@ -20,6 +21,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <Provider store={store}>
       <DashboardLoader />
+      <OrganizationLoader />
       <SidebarProvider>
         <SidebarNav />
         <main className="flex h-dvh w-full flex-col overflow-hidden">

@@ -4,12 +4,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "../../ui/button";
-import { CreateDialogProps } from "@/lib/types";
+import { CreateDialogProps, Organization } from "@/lib/types";
 import { Input } from "../../ui/input";
 import { useState } from "react";
 import { createOrganization } from "@/lib/api";
 
-const CreateDialog = ({ ownerId, setStep }: CreateDialogProps) => {
+const CreateDialog = ({ ownerId, setStep }: CreateDialogProps<Organization>) => {
   const [orgName, setOrgName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +21,7 @@ const CreateDialog = ({ ownerId, setStep }: CreateDialogProps) => {
     setError(null);
 
     try {
-      const response = await createOrganization(orgName, ownerId);
+      const response = await createOrganization(orgName, ownerId!);
       setStep("final", response);
     } catch (err) {
       const errorMessage =
