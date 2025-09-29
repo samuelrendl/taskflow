@@ -29,14 +29,14 @@ export const typeDefs = `#graphql
     USER
   }
 
-  enum IssueStatus {
+  enum TaskStatus {
     OPEN
     IN_PROGRESS
     CLOSED
     UNASSIGNED
   }
 
-  enum IssuePriority {
+  enum TaskPriority {
     LOW
     MEDIUM
     HIGH
@@ -53,8 +53,8 @@ export const typeDefs = `#graphql
     team: Team
     organization: Organization
     ownedOrganizations: [Organization!]!
-    issuesAssigned: [Issue!]!
-    issuesCreated: [Issue!]!
+    tasksAssigned: [Task!]!
+    tasksCreated: [Task!]!
     createdAt: DateTime!
     updatedAt: DateTime!
   }
@@ -74,15 +74,15 @@ export const typeDefs = `#graphql
     name: String!
     users: [User!]!
     organization: Organization!
-    issuesAssigned: [Issue!]!
+    tasksAssigned: [Task!]!
   }
 
-  type Issue {
+  type Task {
     id: String!
     title: String!
     description: String!
-    status: IssueStatus!
-    priority: IssuePriority!
+    status: TaskStatus!
+    priority: TaskPriority!
     assignedTo: User
     createdBy: User!
     createdAt: DateTime!
@@ -94,7 +94,7 @@ export const typeDefs = `#graphql
     organizations: [Organization!]!
     teams: [Team!]!
     users: [User!]!
-    issues: [Issue!]!
+    tasks: [Task!]!
     me: User
     user(id: String!): User
     organization(id: String!): Organization
@@ -127,12 +127,12 @@ export const resolvers = {
     teams: async (_parent: unknown, _args: object, context: GraphQLContext) => {
       return context.prisma.team.findMany();
     },
-    issues: async (
+    tasks: async (
       _parent: unknown,
       _args: object,
       context: GraphQLContext,
     ) => {
-      return context.prisma.issue.findMany();
+      return context.prisma.task.findMany();
     },
 
     me: async (_parent: unknown, _args: object, context: GraphQLContext) => {
@@ -145,8 +145,8 @@ export const resolvers = {
         include: {
           organization: true,
           team: true,
-          issuesAssigned: true,
-          issuesCreated: true,
+          tasksAssigned: true,
+          tasksCreated: true,
           ownedOrganizations: true,
         },
       });
@@ -227,7 +227,7 @@ export const resolvers = {
       }
 
       return context.prisma.$transaction(async (prisma) => {
-        await prisma.issue.deleteMany({
+        await prisma.task.deleteMany({
           where: { team: { organizationId: args.id } },
         });
 
@@ -364,7 +364,7 @@ export const resolvers = {
           data: { teamId: null },
         });
 
-        await prisma.issue.updateMany({
+        await prisma.task.updateMany({
           where: { teamId: args.id },
           data: { teamId: null },
         });

@@ -6,9 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/lib/store";
 import { selectTeam } from "@/lib/store/organizationSlice";
 import { useSelectedTeam } from "@/hooks/useSelectedTeam";
-
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -23,6 +21,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import TeamDialog from "./dialog/Create New Team/TeamDialog";
+import { SidebarMenuButton } from "./ui/sidebar";
 
 const TeamsCombo = () => {
   const [open, setOpen] = React.useState(false);
@@ -37,7 +36,7 @@ const TeamsCombo = () => {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
+        <SidebarMenuButton
           variant="outline"
           role="combobox"
           aria-expanded={open}
@@ -45,9 +44,13 @@ const TeamsCombo = () => {
         >
           {selectedTeam ? selectedTeam.name : "Select team..."}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
+        </SidebarMenuButton>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent
+        className="w-[200px] p-0"
+        side={"right"}
+        align="start"
+      >
         <Command>
           <CommandInput placeholder="Search team..." />
           <CommandList>
@@ -71,12 +74,12 @@ const TeamsCombo = () => {
                   {team.name}
                 </CommandItem>
               ))}
-              <CommandItem className="p-0">
-                <TeamDialog />
-              </CommandItem>
             </CommandGroup>
           </CommandList>
         </Command>
+        <div className="border-t">
+          <TeamDialog />
+        </div>
       </PopoverContent>
     </Popover>
   );

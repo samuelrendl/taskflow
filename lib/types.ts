@@ -44,10 +44,10 @@ export type Team = {
   name: string;
   users: User[];
   organization: OrganizationSummary;
-  issuesAssigned?: Issue[];
+  tasksAssigned?: Task[];
 };
 
-export type Issue = {
+export type Task = {
   id: string;
   title: string;
   description: string;

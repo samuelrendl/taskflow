@@ -44,7 +44,9 @@ function BaseDialog<T = Organization | Team>({
   return (
     <Dialog open={open} onOpenChange={handleDialogChange}>
       <DialogTrigger asChild>
-        <Button variant="outline">{triggerText}</Button>
+        <Button variant="ghost" className="w-full">
+          {triggerText}
+        </Button>
       </DialogTrigger>
       <DialogContent>
         {children({ step, setStep: handleSetStep, stepData })}

@@ -3,6 +3,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { CreateDialogProps, Team } from "@/lib/types";
 import { Input } from "@/components/ui/input";
@@ -50,9 +51,11 @@ const CreateTeamDialog = ({
       />
       {error && <p className="text-red-500">{error}</p>}
       <div className="flex justify-between">
-        <Button variant="outline" onClick={() => setStep("initial")}>
-          Back
-        </Button>
+        <DialogClose asChild>
+          <Button variant="outline" onClick={() => setStep("initial")}>
+            Close
+          </Button>
+        </DialogClose>
         <Button
           variant="outline"
           onClick={handleSubmit}

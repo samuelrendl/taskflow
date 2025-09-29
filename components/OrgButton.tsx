@@ -9,8 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import OrgDialog from "./dialog/Create New Org/OrgDialog";
-import { Button } from "./ui/button";
 import Link from "next/link";
+import { SidebarMenuButton } from "./ui/sidebar";
+import { Building } from "lucide-react";
 
 const OrgButton = () => {
   const me = useMe();
@@ -34,9 +35,10 @@ const OrgButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant={"outline"} className="font-bold">
-          {me.me?.organization?.name}
-        </Button>
+        <SidebarMenuButton variant={"outline"}>
+          <Building />
+          <span>{me.me?.organization?.name}</span>
+        </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>My organization</DropdownMenuLabel>

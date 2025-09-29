@@ -16,6 +16,7 @@ import UserButton from "./UserButton";
 import OrgButton from "./OrgButton";
 import NewTask from "./NewTask";
 import TeamsCombo from "./TeamsCombo";
+import Link from "next/link";
 
 const items = [
   {
@@ -34,9 +35,11 @@ const SidebarNav = () => {
   return (
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader>
-        <OrgButton />
-        <TeamsCombo />
-        <NewTask />
+        <SidebarMenu>
+          <OrgButton />
+          <TeamsCombo />
+          <NewTask />
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />
@@ -45,10 +48,10 @@ const SidebarNav = () => {
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <a href={item.url}>
+                  <Link href={item.url}>
                     <item.icon />
                     <span>{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}

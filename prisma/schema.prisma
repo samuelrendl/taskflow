@@ -15,14 +15,14 @@ enum Role {
   USER
 }
 
-enum IssueStatus {
+enum TaskStatus {
   OPEN
   IN_PROGRESS
   CLOSED
   UNASSIGNED
 }
 
-enum IssuePriority {
+enum TaskPriority {
   LOW
   MEDIUM
   HIGH
@@ -43,8 +43,8 @@ model User {
   ownedOrganizations Organization[] @relation("OrganizationOwner")
   accounts        Account[]
   sessions        Session[]
-  issuesAssigned  Issue[]         @relation("AssignedIssues")
-  issuesCreated   Issue[]         @relation("CreatedIssues")
+  tasksAssigned   Task[]          @relation("AssignedTasks")
+  tasksCreated    Task[]          @relation("CreatedTasks")
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 }
@@ -63,25 +63,25 @@ model Team {
   id String @id @default(cuid())
   name String
   users User[] @relation("TeamUsers")
-  issues Issue[] @relation("TeamIssues")
+  tasks Task[] @relation("TeamTasks")
   organizationId String
   organization Organization @relation(fields: [organizationId], references: [id])
 }
 
-model Issue {
+model Task {
   id            String    @id @default(cuid())
   title         String
   description   String
-  status        IssueStatus
-  priority      IssuePriority
-  assignedToId  String? 
-  assignedTo    User?     @relation("AssignedIssues", fields: [assignedToId], references: [id])
+  status        TaskStatus
+  priority      TaskPriority
+  assignedToId  String?
+  assignedTo    User?     @relation("AssignedTasks", fields: [assignedToId], references: [id])
   createdById   String
-  createdBy     User      @relation("CreatedIssues", fields: [createdById], references: [id])
+  createdBy     User      @relation("CreatedTasks", fields: [createdById], references: [id])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  teamId        String?   
-  team          Team?     @relation("TeamIssues", fields: [teamId], references: [id])
+  teamId        String?
+  team          Team?     @relation("TeamTasks", fields: [teamId], references: [id])
 }
  
 model Account {
