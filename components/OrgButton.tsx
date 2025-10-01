@@ -27,6 +27,10 @@ const OrgButton = () => {
   const items = [
     { title: "Members", url: "/organization/members" },
     {
+      title: "Teams",
+      url: "/organization/teams",
+    },
+    {
       title: "Settings",
       url: "/organization/settings",
     },

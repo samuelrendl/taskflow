@@ -29,6 +29,13 @@ const organizationSlice = createSlice({
         });
       }
     },
+    removeTeam: (state, action: PayloadAction<string>) => {
+      if (state.organization) {
+        state.organization.teams = state.organization.teams.filter(
+          (team) => team.id !== action.payload
+        );
+      }
+    },
     selectTeam: (state, action: PayloadAction<string>) => {
       state.selectedTeamId = action.payload;
     },
@@ -42,6 +49,6 @@ const organizationSlice = createSlice({
   },
 });
 
-export const { setOrganization, addTeam, selectTeam, clearOrganization, setLoading } =
+export const { setOrganization, addTeam, removeTeam, selectTeam, clearOrganization, setLoading } =
   organizationSlice.actions;
 export default organizationSlice.reducer;
