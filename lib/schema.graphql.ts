@@ -109,6 +109,7 @@ export const typeDefs = `#graphql
     deleteTeam(id: String!): Team!
     inviteUserToTeam(userId: String!, teamId: String!): User!
     removeUserFromTeam(userId: String!): User!
+    createTask(title: String!, description: String!, status: TaskStatus!, priority: TaskPriority!, assignTo: String, teamId: String): Task!
   }
 `;
 
@@ -177,7 +178,11 @@ export const resolvers = {
           users: {
             orderBy: { createdAt: "asc" },
           },
-          teams: true,
+          teams: {
+            include: {
+              users: true,
+            },
+          },
         },
       });
     },
@@ -391,10 +396,10 @@ export const resolvers = {
 
       const userToInvite = await context.prisma.user.findUniqueOrThrow({
         where: { id: args.userId },
-        select: { organizationId: true },
+        select: { teamId: true },
       });
 
-      if (userToInvite.organizationId) {
+      if (userToInvite.teamId) {
         throw new Error("User is already part of a team");
       }
 
@@ -436,6 +441,37 @@ export const resolvers = {
         where: { id: args.userId },
         data: { teamId: null },
         include: { team: true },
+      });
+    },
+    createTask: async (
+      _parent: unknown,
+      args: {
+        title: string;
+        description: string;
+        status: "OPEN" | "IN_PROGRESS" | "CLOSED" | "UNASSIGNED";
+        priority: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+        assignTo?: string;
+        teamId?: string;
+      },
+      context: GraphQLContext,
+    ) => {
+      const currentUser = await getCurrentUser(context);
+
+      return context.prisma.task.create({
+        data: {
+          title: args.title,
+          description: args.description,
+          status: args.status,
+          priority: args.priority,
+          createdById: currentUser.id,
+          assignedToId: args.assignTo,
+          teamId: args.teamId,
+        },
+        include: {
+          assignedTo: true,
+          createdBy: true,
+          team: true,
+        },
       });
     },
   },

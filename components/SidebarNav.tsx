@@ -14,9 +14,9 @@ import {
 import { Home, Inbox } from "lucide-react";
 import UserButton from "./UserButton";
 import OrgButton from "./OrgButton";
-import NewTask from "./NewTask";
 import TeamsCombo from "./TeamsCombo";
 import Link from "next/link";
+import CreateNewTaskDialog from "./dialog/Create New Task/CreateNewTaskDialog";
 
 const items = [
   {
@@ -38,7 +38,7 @@ const SidebarNav = () => {
         <SidebarMenu>
           <OrgButton />
           <TeamsCombo />
-          <NewTask />
+          <CreateNewTaskDialog />
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>

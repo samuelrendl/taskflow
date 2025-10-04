@@ -25,8 +25,9 @@ const Teams = () => {
           <h3 className="text-lg font-medium">{team.name}</h3>
           <InviteMemberDialog
             type="team"
+            organizationId={organization.id}
             teamId={team.id}
-            existingMemberIds={organization.users.map((user) => user.id)}
+            existingMemberIds={team.users?.map((user) => user.id) || []}
           />
           <DeleteTeamDialog teamId={team.id} />
         </div>

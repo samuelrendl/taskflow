@@ -1,3 +1,4 @@
+import TeamName from "@/components/TeamName";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 const Dashboard = async () => {
   return (
     <div>
-      <h1>Welcome</h1>
+      <TeamName />
     </div>
   );
 };

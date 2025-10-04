@@ -7,9 +7,16 @@ interface OrganizationState {
   loading: boolean;
 }
 
+const getInitialSelectedTeamId = (): string | null => {
+  if (typeof window !== "undefined") {
+    return localStorage.getItem("selectedTeamId");
+  }
+  return null;
+};
+
 const initialState: OrganizationState = {
   organization: null,
-  selectedTeamId: null,
+  selectedTeamId: getInitialSelectedTeamId(),
   loading: false,
 };
 
@@ -34,10 +41,19 @@ const organizationSlice = createSlice({
         state.organization.teams = state.organization.teams.filter(
           (team) => team.id !== action.payload
         );
+        if (state.selectedTeamId === action.payload) {
+          state.selectedTeamId = null;
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("selectedTeamId");
+          }
+        }
       }
     },
     selectTeam: (state, action: PayloadAction<string>) => {
       state.selectedTeamId = action.payload;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("selectedTeamId", action.payload);
+      }
     },
     clearOrganization: (state) => {
       state.organization = null;

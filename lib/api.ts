@@ -1,5 +1,5 @@
 import { graphqlRequest } from "./graphqlRequest";
-import { Organization, MeResponse, User, Team } from "./types";
+import { Organization, MeResponse, User, Team, Task } from "./types";
 
 export const fetchMe = async () => {
   const data = await graphqlRequest<MeResponse>({
@@ -83,6 +83,13 @@ export const fetchOrganization = async (id: string) => {
           teams {
             id
             name
+            users {
+              id
+              name
+              email
+              role
+              image
+            }
           }
         }
       }
@@ -251,4 +258,52 @@ export const removeUserFromTeam = async (userId: string) => {
     },
   });
   return data.removeUserFromTeam;
+};
+
+export const createTask = async (
+  title: string,
+  description: string,
+  status: string,
+  priority: string,
+  assignTo?: string,
+  teamId?: string,
+) => {
+  const data = await graphqlRequest<{ createTask: Task }>({
+    query: `
+      mutation CreateTask($title: String!, $description: String!, $status: TaskStatus!, $priority: TaskPriority!, $assignTo: String, $teamId: String) {
+        createTask(title: $title, description: $description, status: $status, priority: $priority, assignTo: $assignTo, teamId: $teamId) {
+          id
+          title
+          description
+          status
+          priority
+          assignedTo {
+            id
+            name
+            email
+            image
+          }
+          createdBy {
+            id
+            name
+            email
+          }
+          team {
+            id
+            name
+          }
+          createdAt
+          updatedAt
+        }
+      }`,
+    variables: {
+      title,
+      description,
+      status,
+      priority,
+      assignTo,
+      teamId,
+    },
+  });
+  return data.createTask;
 };

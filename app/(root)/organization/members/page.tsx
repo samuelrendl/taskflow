@@ -16,7 +16,7 @@ const Members = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="text-gray-500">Loading members...</div>
+        <div className="">Loading members...</div>
       </div>
     );
   }
@@ -24,7 +24,7 @@ const Members = () => {
   if (!organization) {
     return (
       <div className="p-6">
-        <div className="text-center text-gray-500">
+        <div className="text-center">
           No organization found or you&#39;re not part of an organization.
         </div>
       </div>
@@ -58,18 +58,18 @@ const Members = () => {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold">
           Organization Members
         </h1>
-        <p className="mt-1 text-gray-600">
+        <p className="mt-1">
           {organization.users.length} member
           {organization.users.length !== 1 ? "s" : ""} in {organization.name}
         </p>
       </div>
 
-      <div className="rounded-lg bg-white shadow">
-        <div className="flex justify-between border-b border-gray-200 px-6 py-4">
-          <h2 className="text-lg font-medium text-gray-900">Members</h2>
+      <div className="rounded-lg shadow">
+        <div className="flex justify-between border-b px-6 py-4">
+          <h2 className="text-lg font-medium">Members</h2>
           <InviteMemberDialog 
             type="organization" 
             organizationId={organization.id}
@@ -77,11 +77,11 @@ const Members = () => {
           />
         </div>
 
-        <div className="divide-y divide-gray-200">
+        <div className="divide-y ">
           {organization.users.map((member: User) => (
             <div
               key={member.id}
-              className="flex items-center justify-between px-6 py-4 hover:bg-gray-50"
+              className="flex items-center justify-between px-6 py-4"
             >
               <div className="flex items-center space-x-4">
                 <Avatar>
@@ -96,7 +96,7 @@ const Members = () => {
 
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center space-x-2">
-                    <p className="truncate text-sm font-medium text-gray-900">
+                    <p className="truncate text-sm font-medium">
                       {member.name || "No name"}
                     </p>
                     {member.id === organization.owner.id && (
@@ -105,7 +105,7 @@ const Members = () => {
                       </span>
                     )}
                   </div>
-                  <p className="truncate text-sm text-gray-500">
+                  <p className="truncate text-sm">
                     {member.email}
                   </p>
                 </div>
@@ -117,7 +117,7 @@ const Members = () => {
                 >
                   {member.role}
                 </span>
-                <div className="text-xs text-gray-400">
+                <div className="text-xs">
                   Joined {new Date(member.createdAt).toLocaleDateString()}
                 </div>
               </div>
@@ -126,7 +126,7 @@ const Members = () => {
         </div>
 
         {organization.users.length === 0 && (
-          <div className="px-6 py-8 text-center text-gray-500">
+          <div className="px-6 py-8 text-center">
             No members found in this organization.
           </div>
         )}

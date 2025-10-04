@@ -36,6 +36,7 @@ export type Organization = {
   teams: {
     id: string;
     name: string;
+    users?: User[];
   }[];
 };
 
