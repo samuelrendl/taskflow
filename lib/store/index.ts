@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import meReducer from "./meSlice";
-import organizationSlice from "./organizationSlice";
+import organizationReducer from "./organizationSlice";
+import tasksReducer from "./tasksSlice";
 
 export const store = configureStore({
   reducer: {
     me: meReducer,
-    organization: organizationSlice,
+    organization: organizationReducer,
+    tasks: tasksReducer,
   },
 });
 

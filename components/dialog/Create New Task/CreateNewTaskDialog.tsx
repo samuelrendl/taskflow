@@ -25,8 +25,9 @@ import { z } from "zod";
 import AssignTaskTo from "./AssignTaskTo";
 import PrioritySelect from "./PrioritySelect";
 import StatusSelect from "./StatusSelect";
-import { createTask } from "@/lib/api";
 import { useSelectedTeam } from "@/hooks/useSelectedTeam";
+import { useTasks } from "@/hooks/useTasks";
+import { toast } from "sonner";
 
 const taskSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -48,8 +49,10 @@ const defaultValues: TaskFormData = {
 
 const CreateNewTaskDialog = () => {
   const [open, setOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const team = useSelectedTeam();
+  const { createTask } = useTasks(team?.id);
 
   const form = useForm<TaskFormData>({
     resolver: zodResolver(taskSchema),
@@ -57,16 +60,25 @@ const CreateNewTaskDialog = () => {
   });
 
   const onSubmit = async (data: TaskFormData) => {
-    console.log(data);
-    await createTask(
-      data.title,
-      data.description,
-      data.status,
-      data.priority,
-      data.assignedToId,
-      team?.id,
-    );
-    setOpen(false);
+    try {
+      setIsSubmitting(true);
+      await createTask(
+        data.title,
+        data.description,
+        data.status,
+        data.priority,
+        data.assignedToId,
+        team?.id,
+      );
+      setOpen(false);
+      form.reset(defaultValues);
+      toast.success("Task created successfully");
+    } catch (error) {
+      console.error("Failed to create task:", error);
+      toast.error("Failed to create task. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -165,8 +177,8 @@ const CreateNewTaskDialog = () => {
               )}
             />
 
-            <Button type="submit" className="w-full">
-              Create Task
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Creating..." : "Create Task"}
             </Button>
           </form>
         </Form>

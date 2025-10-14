@@ -307,3 +307,39 @@ export const createTask = async (
   });
   return data.createTask;
 };
+
+export const fetchTasksByTeam = async (teamId: string) => {
+  const data = await graphqlRequest<{ tasks: Task[] }>({
+    query: `
+      query GetTasksByTeam($teamId: String!) {
+        tasks(teamId: $teamId) {
+          id
+          title
+          description
+          status
+          priority
+          assignedTo {
+            id
+            name
+            email
+            image
+          }
+          createdBy {
+            id
+            name
+            email
+          }
+          team {
+            id
+            name
+          }
+          createdAt
+          updatedAt
+        }
+      }`,
+    variables: {
+      teamId,
+    },
+  });
+  return data.tasks;
+};

@@ -94,7 +94,7 @@ export const typeDefs = `#graphql
     organizations: [Organization!]!
     teams: [Team!]!
     users: [User!]!
-    tasks: [Task!]!
+    tasks(teamId: String!): [Task!]!
     me: User
     user(id: String!): User
     organization(id: String!): Organization
@@ -130,10 +130,17 @@ export const resolvers = {
     },
     tasks: async (
       _parent: unknown,
-      _args: object,
+      args: { teamId: string },
       context: GraphQLContext,
     ) => {
-      return context.prisma.task.findMany();
+      return context.prisma.task.findMany({
+        where: { teamId: args.teamId },
+        include: {
+          assignedTo: true,
+          createdBy: true,
+          team: true,
+        },
+      });
     },
 
     me: async (_parent: unknown, _args: object, context: GraphQLContext) => {
