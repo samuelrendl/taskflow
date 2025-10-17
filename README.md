@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TaskFlow
 
-## Getting Started
+TaskFlow is a multi-team task management app for small enterprises. Create separate workspaces for different departments, assign tasks to team members, set priorities, and track progress—all in one place.
 
-First, run the development server:
+## 🔍 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Multi-team workspace:** Create and manage separate teams (Development, HR, Marketing, etc.), each with their own task lists.
+- **Full CRUD operations:** Create, view, update, and delete tasks with ease
+- **Task assignment:** Assign tasks to specific team members for clear ownership and accountability
+- **Priority management:** Set task priorities to help teams focus on what matters most
+- **Modern tech stack:** Leverages GraphQL for efficient data fetching, Prisma for type-safe database operations, and a responsive Tailwind CSS interface
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Stack:** Next.js, Typescript, Redux, GraphQL, PostgreSQL, Tailwind CSS and Shadcn
+- **Tooling:** Prettier, ESLint
+- **Design:** Figma
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Live Demo
 
-## Learn More
+👉 [Visit TaskView on Vercel](#)(SOON)
 
-To learn more about Next.js, take a look at the following resources:
+## 🧪 Setup Instructions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+SOON
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 💡 Motivation
 
-## Deploy on Vercel
+Matchview is a personal project created to:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- To learn and get experience with Redux, GraphQL, Prisma and PostgreSQL.
+- Improve my frontend skills using modern tools
+- Add a polished, real-world project to my portfolio
