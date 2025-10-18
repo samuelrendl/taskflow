@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { useSelectedTeam } from "@/hooks/useSelectedTeam";
 import { useTasks } from "@/hooks/useTasks";
+import DeleteTaskDialog from "./dialog/DeleteTaskDialog";
 
 const headItems = ["Title", "Description", "Status", "Priority", "Assigned To"];
 
@@ -28,7 +29,9 @@ const TaskTable = () => {
   if (!teamId) {
     return (
       <div className="flex items-center justify-center p-8">
-        <p className="text-muted-foreground">Please select a team to view tasks</p>
+        <p className="text-muted-foreground">
+          Please select a team to view tasks
+        </p>
       </div>
     );
   }
@@ -57,10 +60,15 @@ const TaskTable = () => {
         {tasks.map((task) => (
           <TableRow key={task.id}>
             <TableCell className="font-medium">{task.title}</TableCell>
-            <TableCell className="max-w-md truncate">{task.description}</TableCell>
+            <TableCell className="max-w-md truncate">
+              {task.description}
+            </TableCell>
             <TableCell>{task.status}</TableCell>
             <TableCell>{task.priority}</TableCell>
             <TableCell>{task.assignedTo?.name || "Unassigned"}</TableCell>
+            <TableCell>
+              <DeleteTaskDialog taskId={task.id} />
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

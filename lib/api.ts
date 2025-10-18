@@ -343,3 +343,20 @@ export const fetchTasksByTeam = async (teamId: string) => {
   });
   return data.tasks;
 };
+
+export const deleteTask = async (id: string) => {
+  const data = await graphqlRequest<{ deleteTask: Task }>({
+    query: `
+      mutation DeleteTask($id: String!) {
+        deleteTask(id: $id) {
+          id
+        }
+      }
+    `,
+    variables: {
+      id,
+    },
+  });
+  return data.deleteTask;
+};
+  

@@ -110,6 +110,7 @@ export const typeDefs = `#graphql
     inviteUserToTeam(userId: String!, teamId: String!): User!
     removeUserFromTeam(userId: String!): User!
     createTask(title: String!, description: String!, status: TaskStatus!, priority: TaskPriority!, assignTo: String, teamId: String): Task!
+    deleteTask(id: String!): Task!
   }
 `;
 
@@ -479,6 +480,15 @@ export const resolvers = {
           createdBy: true,
           team: true,
         },
+      });
+    },
+    deleteTask: async (
+      _parent: unknown,
+      args: { id: string },
+      context: GraphQLContext,
+    ) => {
+      return context.prisma.task.delete({
+        where: { id: args.id },
       });
     },
   },

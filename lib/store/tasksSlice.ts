@@ -22,14 +22,12 @@ const tasksSlice = createSlice({
       state.loading = false;
     },
     addTask: (state, action: PayloadAction<Task>) => {
-      // Defensive check - ensure tasks array exists
       if (!state.tasks) {
         state.tasks = [];
       }
       state.tasks.push(action.payload);
     },
     updateTask: (state, action: PayloadAction<Task>) => {
-      // Defensive check - ensure tasks array exists
       if (!state.tasks) {
         state.tasks = [];
         return;
@@ -42,7 +40,6 @@ const tasksSlice = createSlice({
       }
     },
     removeTask: (state, action: PayloadAction<string>) => {
-      // Defensive check - ensure tasks array exists
       if (!state.tasks) {
         state.tasks = [];
         return;
