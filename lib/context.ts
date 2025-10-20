@@ -4,7 +4,7 @@ export type GraphQLContext = {
   prisma: typeof prisma;
 };
 
-export function createContext(): GraphQLContext {
+export async function createContext(): Promise<GraphQLContext> {
   return {
     prisma,
   };

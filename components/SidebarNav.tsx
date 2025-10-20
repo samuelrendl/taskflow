@@ -33,7 +33,7 @@ const items = [
 
 const SidebarNav = () => {
   return (
-    <Sidebar variant="floating" collapsible="icon">
+    <Sidebar variant="floating" collapsible="offcanvas">
       <SidebarHeader>
         <SidebarMenu>
           <OrgButton />
